@@ -1,0 +1,25 @@
+diff --git a/Surveys/create_survey.php b/Surveys/create_survey.php
+index 0b31860..3c50a18 100644
+--- a/Surveys/create_survey.php
++++ b/Surveys/create_survey.php
+@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
+     }
+ 
+ 	// Save survey info
+-	$sql = "insert into redcap_surveys (project_id, form_name, acknowledgement, instructions, question_by_section,
++	$sql = "replace into redcap_surveys (project_id, form_name, acknowledgement, instructions, question_by_section,
+ 			question_auto_numbering, save_and_return, survey_enabled, title,
+ 			view_results, min_responses_view_results, check_diversity_view_results, end_survey_redirect_url, survey_expiration,
+ 			survey_auth_enabled_single, edit_completed_response, display_page_number, hide_back_button, show_required_field_text,
+@@ -149,7 +149,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
+ 			, " . checkNull($pdf_econsent_signature_field4) . "
+ 			, " . checkNull($pdf_econsent_signature_field5) . "
+         )";
+-	$survey_id = (db_query($sql) ? db_insert_id() : exit("An error occurred. Please try again."));
++        if (!db_query($sql)) {
++            exit("An error occurred. Please try again.");
++            }
++	$survey_id = db_insert_id();
+ 
+ 	// Upload logo
+ 	$hide_title = (isset($hide_title) && $hide_title == "on" ? "1" : "0");
